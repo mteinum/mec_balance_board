@@ -25,7 +25,7 @@ This provides immediate and intuitive feedback during dry-fire or live-fire trai
 ## Hardware
 - **M5Stack AtomS3**  
   https://shop.m5stack.com/products/atoms3  
-- **MEC Balance Board** (or any standard wobble/balance board)
+- **MEC Balance Board** (or any standard wobble/balance board)  
   https://shop.mec-shot.com/mec-balance-board
 
 ## Use Case
