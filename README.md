@@ -19,6 +19,7 @@ This provides immediate and intuitive feedback during dry-fire or live-fire trai
 - Real-time exponential smoothing for clean, stable readings
 - Full-screen color feedback
 - Numeric tilt readout (°)
+- **One-button calibration** — press the button to set your current stance as the zero reference
 - Easy to tune thresholds for different shooters and disciplines
 
 ## Hardware
@@ -29,6 +30,7 @@ This provides immediate and intuitive feedback during dry-fire or live-fire trai
 ## Use Case
 Mount the AtomS3 firmly to the balance board (tape or 3D-printed holder).  
 Stand on the board in your shooting stance.  
+**Press the button** to calibrate — this sets your current position as the center/zero reference.  
 Try to keep the screen **green** for as long as possible.
 
 Great for:
@@ -42,6 +44,7 @@ The repository includes a full Arduino sketch:
 - IMU reading and filtering  
 - Tilt angle calculation  
 - Color feedback rendering  
+- Button-activated calibration system
 - Optional tuning parameters
 
 ## License

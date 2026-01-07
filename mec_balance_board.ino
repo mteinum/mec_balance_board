@@ -33,14 +33,45 @@ uint32_t lastSampleMs = 0;
 // For avoiding unnecessary full redraws
 int lastZone = -1;   // 0 = green, 1 = yellow, 2 = red
 
+// Calibration state
+float calibrationTiltX = 0.0f;  // Reference tilt around X axis
+float calibrationTiltY = 0.0f;  // Reference tilt around Y axis
+bool isCalibrated = false;
+
 // Compute combined tilt from accelerometer in degrees
 float computeTiltMagnitudeDeg(float ax, float ay, float az) {
     // Tilt around X and Y relative to gravity
     float tiltX = atan2f(ax, az) * 180.0f / PI;
     float tiltY = atan2f(ay, az) * 180.0f / PI;
 
+    // Apply calibration offset if calibrated
+    if (isCalibrated) {
+        tiltX -= calibrationTiltX;
+        tiltY -= calibrationTiltY;
+    }
+
     // Combined magnitude
     return sqrtf(tiltX * tiltX + tiltY * tiltY);
+}
+
+// Calibrate the current orientation as the center/zero point
+void calibrate(float ax, float ay, float az) {
+    calibrationTiltX = atan2f(ax, az) * 180.0f / PI;
+    calibrationTiltY = atan2f(ay, az) * 180.0f / PI;
+    isCalibrated = true;
+    
+    // Visual feedback
+    AtomS3.Display.fillScreen(BLUE);
+    AtomS3.Display.setTextDatum(middle_center);
+    AtomS3.Display.setTextColor(WHITE, BLUE);
+    AtomS3.Display.setTextSize(2);
+    AtomS3.Display.drawString(
+        "CALIBRATED",
+        AtomS3.Display.width() / 2,
+        AtomS3.Display.height() / 2
+    );
+    delay(500);
+    lastZone = -1;  // Force full redraw
 }
 
 void drawScreen(int zone, float tiltDeg) {
@@ -111,6 +142,14 @@ void setup() {
 void loop() {
     AtomS3.update();
     uint32_t now = millis();
+
+    // Check for button press to calibrate
+    if (AtomS3.BtnA.wasPressed()) {
+        // Update IMU to get current reading
+        AtomS3.Imu.update();
+        auto data = AtomS3.Imu.getImuData();
+        calibrate(data.accel.x, data.accel.y, data.accel.z);
+    }
 
     if (now - lastSampleMs < SAMPLE_INTERVAL_MS) {
         return;
